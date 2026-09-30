@@ -1,0 +1,33 @@
+# Secrets and keys: never commit these
+*.key
+*.pem
+*.pfx
+*.p12
+*.kdbx
+*.env
+.env
+secrets/
+*sslkeylog*
+*keylog*.txt
+
+# Troubleshooting answers stay hidden until Phase 8 is finished
+troubleshooting/answers/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Virtual machine files are far too large for Git
+*.vhdx
+*.avhdx
+*.iso
+*.vmcx
+*.vmrs
+
+# OS and editor clutter
+Thumbs.db
+.DS_Store
+~$*
+.vscode/
