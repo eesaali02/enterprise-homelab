@@ -28,3 +28,17 @@ End the phase with a short summary of what you learned and what you would do dif
 
 ![Hyper-V Manager](screenshots/hyperv-manager.png)
 
+## 2026-10-14 – Downloaded and checked ISOs
+Stored in E:\HomeLab\ISOs (not in Git, too big).
+
+| File | Version | SHA-256 (first 12 chars) | Matches vendor? |
+|---|---|---|---|
+| WinServer2025-eval.iso | build 26100 | 7B052573BA78 | no published hash |
+| Win11-Enterprise-eval.iso | 26H2, build 26300 | BC3F24086EBA | no published hash |
+| ubuntu-26.04.1-live-server-amd64.iso | 26.04.1 | CC8A95CDE20F | yes |
+| kali-linux-2026.2-hyperv-amd64.7z | 2026.2 | D7CD667761B1 | yes |
+
+* Checked with PowerShell: Get-FileHash * | Format-List
+* Used Ubuntu 26.04 instead of 24.04 because it's the newest LTS.
+* Used Kali's pre-built Hyper-V image instead of the installer ISO, so there's no OS install needed.
+
