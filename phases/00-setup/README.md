@@ -46,3 +46,16 @@ Stored in E:\HomeLab\ISOs (not in Git, too big).
 * Jira space "Enterprise Network Lab": 10 Epics (KAN-4 to KAN-13), one per phase. Phase 0 Tasks under KAN-4.
 
 * Planned the schedule on 2026-10-14, using 2026-10-12 as the start. New finish date: 2026-12-20. Baseline saved in tracking/schedule.pod.
+
+## First draft diagrams
+Rough drafts, to be redrawn in Phase 1.
+
+![Physical](../../docs/diagrams/physical.png)
+![Logical](../../docs/diagrams/logical.png)
+
+## Phase 0 summary
+- What I did: prepared the host (virtualization, Hyper-V, storage on E:), verified 4 images,
+  set up Git, Jira, ServiceNow and a baselined schedule, and drew the first diagrams.
+- What I learned: I learned how to set up virtualization on a Windows PC, clone a repository, commit and push changes, how to add a computer on service now, set up and use a Jira Kanban Board, and plan a baselined schedule using Project Libre
+- What I'd do differently: 
+- Schedule: took longer than planned (late start), so I re-planned and the new finish is Dec 21.
