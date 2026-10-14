@@ -21,3 +21,10 @@ End the phase with a short summary of what you learned and what you would do dif
 
 ![Virtualization enabled](screenshots/virtualization-enabled.png)
 
+## 2026-10-14 – Turned on Hyper-V
+* Confirmed Windows 11 Pro (Settings > System > About), which supports Hyper-V.
+* Turned on Hyper-V in "Turn Windows features on or off" (Management Tools + Platform), then rebooted.
+* Checked: Hyper-V Manager opens and shows my PC. Task Manager now says "A hypervisor has been detected."
+
+![Hyper-V Manager](screenshots/hyperv-manager.png)
+
