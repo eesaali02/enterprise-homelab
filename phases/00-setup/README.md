@@ -28,7 +28,7 @@ End the phase with a short summary of what you learned and what you would do dif
 
 ![Hyper-V Manager](screenshots/hyperv-manager.png)
 
-## 2026-10-14 – Downloaded and checked ISOs
+## Downloaded and checked ISOs
 Stored in E:\HomeLab\ISOs (not in Git, too big).
 
 | File | Version | SHA-256 (first 12 chars) | Matches vendor? |
@@ -42,3 +42,7 @@ Stored in E:\HomeLab\ISOs (not in Git, too big).
 * Used Ubuntu 26.04 instead of 24.04 because it's the newest LTS.
 * Used Kali's pre-built Hyper-V image instead of the installer ISO, so there's no OS install needed.
 
+* Created ServiceNow CMDB record HOST01 (Computer) for the physical host.
+* Jira space "Enterprise Network Lab": 10 Epics (KAN-4 to KAN-13), one per phase. Phase 0 Tasks under KAN-4.
+
+* Planned the schedule on 2026-10-14, using 2026-10-12 as the start. New finish date: 2026-12-20. Baseline saved in tracking/schedule.pod.
