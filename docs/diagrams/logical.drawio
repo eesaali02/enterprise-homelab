@@ -74,7 +74,7 @@
         <mxCell id="nzS1wshUzspKyn8IPoCr-17" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;" value="MGMT01 .20" vertex="1">
           <mxGeometry height="80" width="80" x="535" y="750" as="geometry" />
         </mxCell>
-        <mxCell id="nzS1wshUzspKyn8IPoCr-18" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;" value="SIEM01" vertex="1">
+        <mxCell id="nzS1wshUzspKyn8IPoCr-18" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;" value="SIEM01 .10" vertex="1">
           <mxGeometry height="80" width="80" x="615" y="750" as="geometry" />
         </mxCell>
         <mxCell id="nzS1wshUzspKyn8IPoCr-19" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;" value="GUEST01 (DHCP)" vertex="1">
