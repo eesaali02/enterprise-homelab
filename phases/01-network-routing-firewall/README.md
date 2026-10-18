@@ -9,3 +9,7 @@ Learning notes for this phase, written the same day you do the work:
 - problems you hit and how you solved them, with the ServiceNow incident or change number
 
 End the phase with a short summary of what you learned and what you would do differently.
+
+## 2026-10-18 – Planning
+* Created the IPAM sheet (ipam/lab-ipam.xlsx) and the traffic policy (docs/traffic-policy.md).
+* Raised change CHG0030001 "Build core network", planned Oct 19-23.
