@@ -13,3 +13,8 @@ End the phase with a short summary of what you learned and what you would do dif
 ## 2026-10-18 – Planning
 * Created the IPAM sheet (ipam/lab-ipam.xlsx) and the traffic policy (docs/traffic-policy.md).
 * Raised change CHG0030001 "Build core network", planned Oct 19-23.
+
+* CHG0030001 approved by Network group and CAB (on their behalf), moved to Implement.
+
+* LAB-CORE virtual private switch created on Hyper-V
+![LAB-CORE Virtual Private Switch](screenshots/LAB-CORE-created.png)
