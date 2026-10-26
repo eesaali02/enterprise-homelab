@@ -41,3 +41,17 @@ Matched Hyper-V adapters to Windows adapters by MAC address, then renamed them.
 * No default gateway on the VLAN adapters: the router is the gateway for those networks.
 
 ![Interfaces](screenshots/Interfaces.png)
+
+## 2026-10-25 Turned on Routing and NAT (RRAS)
+* Installed routing role 
+![Install Routing Role](screenshots/install_routing_role.png)
+
+* Installed RRAS, custom config: LAN routing + NAT. NAT enabled on OUTSIDE (public interface)
+![RRAS](screenshots/rras-nat.png)
+* Routing table: 4 connected routes (10.10.10/20/30/40.0/24, next hop 0.0.0.0) + default route 0.0.0.0/0 via OUTSIDE.
+* Why the router knows these networks without typed routes: giving an adapter an IP + mask creates a "connected route" automatically. Static routes are only needed for networks the router isn't directly attached to.
+* Forwarding is Enabled on all adapters (RRAS turned this on).
+![Routing Table](screenshots/routing-table.png)
+
+
+
