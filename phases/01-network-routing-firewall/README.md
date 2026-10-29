@@ -79,5 +79,13 @@ Matched Hyper-V adapters to Windows adapters by MAC address, then renamed them.
 
 ![VLAN 10 test](screenshots/guest01-vlan10-test.png)
 
+## 2026-10-28 – Guest filter (router)
+* RRAS > IPv4 > General > VLAN40-Guest > Inbound Filters: drop source 10.10.40.0/24 to destination 10.10.0.0/16. Action: "Receive all packets except those that meet the criteria".
+* Result: GUEST01 can no longer reach 10.10.10.1 (100% loss) but still reaches 1.1.1.1 and google.com.
+* Known limitation: RRAS filters are stateless (no memory of connections). If Management connects to a Guest device, the replies to 10.10.30.x are dropped too. pfSense (Phase 4) is stateful and fixes this.
+
+![Guest filter](screenshots/rras-guest-filter.png)
+![After filter](screenshots/guest01-tests-after-filter.png)
+
 
 
