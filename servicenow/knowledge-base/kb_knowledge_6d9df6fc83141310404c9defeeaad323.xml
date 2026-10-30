@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-10-30 17:43:38">
+<kb_knowledge action="INSERT_OR_UPDATE">
+<active>true</active>
+<article_id>6d9df6fc83141310404c9defeeaad323</article_id>
+<article_type>text</article_type>
+<author display_value="System Administrator">6816f79cc0a8016401c5a33be04be441</author>
+<base_version display_value=""/>
+<can_read_user_criteria/>
+<cannot_read_user_criteria/>
+<category/>
+<cmdb_ci display_value=""/>
+<description/>
+<direct>false</direct>
+<disable_commenting>false</disable_commenting>
+<disable_suggesting>false</disable_suggesting>
+<display_attachments>false</display_attachments>
+<display_number>KB0010001 v1.0</display_number>
+<editor_type>ECE</editor_type>
+<flagged>false</flagged>
+<generated_with_now_assist>false</generated_with_now_assist>
+<helpful_count>0</helpful_count>
+<image/>
+<instrumentation_metadata>{"firstLoadTimestamp":1793380974892,"isGenAiGenerated":false,"isGenAiMultiTaskCancelled":false,"taskList":[],"timeTakenToFirstSave":150395,"timeTakenToPublish":327935}</instrumentation_metadata>
+<kb_category display_value=""/>
+<kb_knowledge_base display_value="IT">a7e8a78bff0221009b20ffffffffff17</kb_knowledge_base>
+<latest>false</latest>
+<latest_aqi display_value=""/>
+<meta/>
+<meta_description>Purpose Add a new network (VLAN) to the lab and make the router route it. Before you start - Pick the</meta_description>
+<number>KB0010001</number>
+<ownership_group display_value=""/>
+<published>2026-10-30</published>
+<rating/>
+<replacement_article display_value=""/>
+<retired/>
+<revised_by display_value=""/>
+<roles/>
+<scheduled_publish_date/>
+<short_description>How to add a new VLAN to the RRAS router (CORE-RTR01)</short_description>
+<source display_value=""/>
+<summary display_value="KB0010001">5a2e7a3083541310404c9defeeaad3e2</summary>
+<sys_class_name>kb_knowledge</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-10-30 17:25:25</sys_created_on>
+<sys_domain>global</sys_domain>
+<sys_domain_path>/</sys_domain_path>
+<sys_id>6d9df6fc83141310404c9defeeaad323</sys_id>
+<sys_mod_count>5</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-10-30 17:28:22</sys_updated_on>
+<sys_view_count>1</sys_view_count>
+<taxonomy_topic display_value=""/>
+<text><![CDATA[<div><p><strong>Purpose</strong><br />Add a new network (VLAN) to the lab and make the router route it.</p><p><strong>Before you start</strong><br />- Pick the VLAN ID, subnet and gateway (.1) and add them to the IPAM sheet.<br />- Raise a change request and get it approved.<br />- Take a Hyper-V checkpoint of CORE-RTR01.</p><p><strong>Steps</strong><br />1. Hyper-V Manager &gt; CORE-RTR01 &gt; Settings &gt; Add Hardware &gt; Network Adapter.<br />   Switch: LAB-CORE. Tick &#34;Enable virtual LAN identification&#34; and enter the VLAN ID.<br />2. On the host, find the new adapter&#39;s MAC address:<br />   Get-VMNetworkAdapter -VMName CORE-RTR01 | Select SwitchName, MacAddress<br />3. Inside CORE-RTR01, match it by MAC and rename it:<br />   Get-NetAdapter | Select Name, MacAddress<br />   Rename-NetAdapter -Name &#34;Ethernet X&#34; -NewName &#34;VLANxx-Name&#34;<br />4. Give it the gateway address (no default gateway):<br />   New-NetIPAddress -InterfaceAlias &#34;VLANxx-Name&#34; -IPAddress 10.10.xx.1 -PrefixLength 24<br />5. In the RRAS console, check the new adapter appears under IPv4 &gt; General.<br />   (If it doesn&#39;t, restart the service: Restart-Service RemoteAccess)<br />6. Add any filters or firewall rules the traffic policy requires.</p><p><strong>Verify</strong><br />- Get-NetRoute shows a connected route for the new subnet.<br />- A test VM in the new VLAN can ping 10.10.xx.1 and the internet.</p><p><strong>Common mistake</strong><br />The Hyper-V VLAN ID and the client&#39;s IP must match, or pings fail.</p></div>]]></text>
+<topic>General</topic>
+<use_count>0</use_count>
+<valid_to>2100-01-01</valid_to>
+<version display_value="1.0">fdde36b083541310404c9defeeaad344</version>
+<view_as_allowed>true</view_as_allowed>
+<wiki/>
+<workflow_state>published</workflow_state>
+</kb_knowledge>
+</unload>
