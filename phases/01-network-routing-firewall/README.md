@@ -119,4 +119,6 @@ GUEST01 was moved between VLANs (Hyper-V VLAN ID + matching IP) to test each rul
 ![Test C](screenshots/test-c-guest-ports.png)
 ![Test D](screenshots/test-d-check-firewall.png)
 
+* Closed CHG0030001 as Successful on 2026-10-30, with test evidence attached.
+
 
