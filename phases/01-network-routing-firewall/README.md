@@ -122,7 +122,7 @@ GUEST01 was moved between VLANs (Hyper-V VLAN ID + matching IP) to test each rul
 * Closed CHG0030001 as Successful on 2026-10-30, with test evidence attached.
 
    * CMDB: CORE-RTR01 (Windows server, virtualized by HOST01) + 4 IP network records linked to it.
-   * Knowledge article: "How to add a new VLAN to the RRAS router" (KB number: KB001001).
+   * Knowledge article: "How to add a new VLAN to the RRAS router" (KB number: KB0010001).
    * Started docs/network-design.md.
 
 ## Phase 1 summary

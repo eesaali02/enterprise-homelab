@@ -42,7 +42,3 @@ Tested: 8 tests, all passed (see phases/01 notes).
 ## 5. Known limitations
 - RRAS filters are stateless, so Management can't yet manage Guest devices (replies are dropped). Fixed by pfSense in Phase 4.
 - Single router = single point of failure. Acceptable for a lab.
-
-   * CMDB: CORE-RTR01 (Windows server, virtualized by HOST01) + 4 IP network records linked to it.
-   * Knowledge article: "How to add a new VLAN to the RRAS router" (KB number: KB001001).
-   * Started docs/network-design.md.
