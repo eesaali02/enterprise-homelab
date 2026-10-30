@@ -121,4 +121,33 @@ GUEST01 was moved between VLANs (Hyper-V VLAN ID + matching IP) to test each rul
 
 * Closed CHG0030001 as Successful on 2026-10-30, with test evidence attached.
 
+   * CMDB: CORE-RTR01 (Windows server, virtualized by HOST01) + 4 IP network records linked to it.
+   * Knowledge article: "How to add a new VLAN to the RRAS router" (KB number: KB001001).
+   * Started docs/network-design.md.
 
+## Phase 1 summary
+
+**What I built**
+- A segmented network inside Hyper-V: one Private switch (LAB-CORE) carrying four VLANs (Servers, Workstations, Management, Guest).
+- CORE-RTR01 (Windows Server 2025) routing between the VLANs with RRAS, and NAT so the whole lab shares one outside address for internet access.
+- Two layers of security: a stateless RRAS filter that blocks Guest from every internal network, and stateful Windows Firewall rules on the router (RDP only from Management, ping not from Guest, drop logging on).
+- GUEST01 (Kali) as a test client, moved between VLANs to prove each rule.
+
+**Results**
+- All 8 policy tests passed, and the firewall log shows the expected drops.
+- Change CHG0030001 went through Network and CAB approval and was closed as Successful, with evidence attached.
+- CMDB: CORE-RTR01 linked to HOST01 and the four VLAN networks. Knowledge article written for adding a new VLAN.
+
+**What I learned**
+- Connected routes: giving an adapter an IP and mask is enough for the router to know that network. Static routes are only for networks it isn't attached to.
+- Stateless vs stateful: RRAS filters judge each packet alone, so return traffic has to be thought about. Windows Firewall remembers connections.
+- A host firewall protects the machine itself, not traffic routed through it, so you need both layers.
+- TTL drops by 1 per router hop, which is an easy way to prove traffic was routed.
+- Practical lessons: match adapters by MAC (Windows numbers them randomly), keep the Hyper-V VLAN ID and the client IP in sync, and Windows blocks ping by default.
+
+**What I'd do differently**
+- Change the VLAN ID and the IP together every time. Mismatching them cost me some troubleshooting time.
+- Leave more time for ServiceNow. Approvals, groups and CMDB relationships took longer than the technical work.
+
+**Schedule**
+- Planned: Oct 19 – Oct 23. Actual: Oct 18 – Oct 30 (one week late). Most of the extra time went to learning ServiceNow workflows and fitting lab sessions around work. Phase 2 dates will shift to match.
