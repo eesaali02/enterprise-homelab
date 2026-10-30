@@ -87,5 +87,36 @@ Matched Hyper-V adapters to Windows adapters by MAC address, then renamed them.
 ![Guest filter](screenshots/rras-guest-filter.png)
 ![After filter](screenshots/guest01-tests-after-filter.png)
 
+## 2026-10-30 – Host firewall on CORE-RTR01
+* Turned on Remote Desktop and scoped all 3 RDP rules (TCP, UDP, shadow) to 10.10.30.0/24 only, so only the Management VLAN can RDP to the router.
+* Tightened the ping rule to VLANs 10, 20 and 30. Guest can't ping the router.
+* Turned on logging of dropped packets for all firewall profiles: %systemroot%\system32\LogFiles\Firewall\pfirewall.log
+* Two layers of protection:
+  - Router filter (RRAS): controls traffic passing THROUGH the router. Stateless.
+  - Windows Defender Firewall: protects the router ITSELF. Stateful (remembers connections, so replies are allowed back automatically).
+
+![Router host firewall](screenshots/router-host-firewall.png)
+
+## 2026-10-30 – Policy tests
+GUEST01 was moved between VLANs (Hyper-V VLAN ID + matching IP) to test each rule from the right network.
+
+| # | From | To | Port / test | Expected (policy) | Actual | Pass? |
+|---|---|---|---|---|---|---|
+| A1 | VLAN 30 (10.10.30.50) | 10.10.30.1 | ping | Allowed | Reply | ✅ |
+| A2 | VLAN 30 (10.10.30.50) | 10.10.30.1 | TCP 3389 (RDP) | Allowed: admin from Management | Open | ✅ |
+| B1 | VLAN 20 (10.10.20.50) | 10.10.20.1 | ping | Allowed | Reply | ✅ |
+| B2 | VLAN 20 (10.10.20.50) | 10.10.20.1 | TCP 3389 (RDP) | Blocked: RDP only from Management | Timed out | ✅ |
+| C1 | VLAN 40 (10.10.40.50) | 10.10.10.1 | TCP 22, 80, 443, 445, 3389 | Blocked: Guest to internal | Filtered | ✅ |
+| C2 | VLAN 40 (10.10.40.50) | 1.1.1.1 | ping | Allowed: Guest to internet | Reply | ✅ |
+| C3 | VLAN 40 (10.10.40.50) | example.com | HTTPS | Allowed: Guest web browsing | HTTP 200 | ✅ |
+| D | CORE-RTR01 firewall log | | | DROP from 10.10.20.50 to 3389 | DROP logged | ✅ |
+
+* All results match the traffic policy (docs/traffic-policy.md).
+* nc showed "inverse host lookup failed": no DNS server in the lab yet (Phase 2). Harmless. `-n` skips the lookup.
+
+![Test A](screenshots/test-a-mgmt-rdp.png)
+![Test B](screenshots/test-b-wrkstn-rdp.png)
+![Test C](screenshots/test-c-guest-ports.png)
+![Test D](screenshots/test-d-check-firewall.png)
 
 
