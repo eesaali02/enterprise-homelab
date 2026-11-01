@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-11-01 20:19:59">
+<cmdb_ci_win_server action="INSERT_OR_UPDATE">
+<asset display_value="Unknown">3dcbfaf883141310404c9defeeaad3cb</asset>
+<asset_tag/>
+<assigned/>
+<assigned_to display_value=""/>
+<assignment_group display_value=""/>
+<attestation_score/>
+<attestation_status>Not Yet Reviewed</attestation_status>
+<attested>false</attested>
+<attested_by display_value=""/>
+<attested_date/>
+<attributes/>
+<business_unit display_value=""/>
+<can_print>false</can_print>
+<category>Hardware</category>
+<cd_rom>false</cd_rom>
+<cd_speed/>
+<change_control display_value=""/>
+<chassis_type/>
+<checked_in/>
+<checked_out/>
+<classification>Production</classification>
+<comments/>
+<company display_value=""/>
+<correlation_id/>
+<cost/>
+<cost_cc>USD</cost_cc>
+<cost_center display_value=""/>
+<cpu_core_count/>
+<cpu_core_thread/>
+<cpu_count>2</cpu_count>
+<cpu_manufacturer display_value=""/>
+<cpu_name/>
+<cpu_speed/>
+<cpu_type/>
+<default_gateway/>
+<delivery_date/>
+<department display_value=""/>
+<discovery_source/>
+<disk_space/>
+<dns_domain/>
+<dr_backup display_value=""/>
+<due/>
+<due_in/>
+<duplicate_of display_value=""/>
+<environment/>
+<fault_count>0</fault_count>
+<firewall_status>Intranet</firewall_status>
+<first_discovered/>
+<floppy/>
+<form_factor/>
+<fqdn/>
+<gl_account/>
+<hardware_status>installed</hardware_status>
+<hardware_substatus/>
+<host_name/>
+<install_date/>
+<install_status>1</install_status>
+<internet_facing>true</internet_facing>
+<invoice_number/>
+<ip_address>10.10.30.1</ip_address>
+<justification/>
+<last_discovered/>
+<lease_id/>
+<life_cycle_stage display_value=""/>
+<life_cycle_stage_status display_value=""/>
+<location display_value=""/>
+<mac_address/>
+<maintenance_schedule display_value=""/>
+<managed_by display_value=""/>
+<managed_by_group display_value=""/>
+<manufacturer display_value=""/>
+<model_id display_value="Unknown">75cbfaf883141310404c9defeeaad349</model_id>
+<model_number/>
+<monitor>false</monitor>
+<most_frequent_user display_value=""/>
+<name>CORE-RTR01</name>
+<object_id/>
+<operational_status>1</operational_status>
+<order_date/>
+<os>Windows</os>
+<os_address_width/>
+<os_domain/>
+<os_service_pack/>
+<os_version>Windows Server 2025 Standard</os_version>
+<owned_by display_value=""/>
+<po_number/>
+<product_instance_id/>
+<purchase_date/>
+<ram>2048</ram>
+<schedule display_value=""/>
+<serial_number/>
+<short_description>Lab core router (RRAS). IP 10.10.30.1 (Management) Routes VLANs 10/20/30/40, NAT to the outside. VM on HOST01. Built under CHG0030001.</short_description>
+<skip_sync>false</skip_sync>
+<start_date/>
+<subcategory>Computer</subcategory>
+<support_group display_value=""/>
+<supported_by display_value=""/>
+<sys_class_name>cmdb_ci_win_server</sys_class_name>
+<sys_class_path>/!!/!2/!(/!!/!#</sys_class_path>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-10-30 17:02:52</sys_created_on>
+<sys_domain>global</sys_domain>
+<sys_domain_path>/</sys_domain_path>
+<sys_id>3d28bef083141310404c9defeeaad396</sys_id>
+<sys_mod_count>2</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-10-30 17:15:01</sys_updated_on>
+<unverified>false</unverified>
+<used_for>Production</used_for>
+<vendor display_value=""/>
+<virtual>false</virtual>
+<warranty_expiration/>
+</cmdb_ci_win_server>
+</unload>

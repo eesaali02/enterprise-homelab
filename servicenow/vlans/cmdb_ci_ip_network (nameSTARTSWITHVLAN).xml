@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2026-11-01 20:18:09">
+<cmdb_ci_ip_network action="INSERT_OR_UPDATE">
+<asset display_value=""/>
+<asset_tag/>
+<assigned/>
+<assigned_to display_value=""/>
+<assignment_group display_value=""/>
+<attestation_score/>
+<attestation_status>Not Yet Reviewed</attestation_status>
+<attested>false</attested>
+<attested_by display_value=""/>
+<attested_date/>
+<attributes/>
+<business_unit display_value=""/>
+<can_print>false</can_print>
+<category>Resource</category>
+<change_control display_value=""/>
+<checked_in/>
+<checked_out/>
+<comments/>
+<company display_value=""/>
+<correlation_id/>
+<cost/>
+<cost_cc>USD</cost_cc>
+<cost_center display_value=""/>
+<delivery_date/>
+<department display_value=""/>
+<discover>false</discover>
+<discovery_source/>
+<dns_domain/>
+<due/>
+<due_in/>
+<duplicate_of display_value=""/>
+<environment/>
+<fault_count>0</fault_count>
+<first_discovered/>
+<fqdn/>
+<gl_account/>
+<install_date/>
+<install_status>1</install_status>
+<invoice_number/>
+<ip_address/>
+<justification/>
+<last_discovered/>
+<lease_id/>
+<life_cycle_stage display_value=""/>
+<life_cycle_stage_status display_value=""/>
+<location display_value=""/>
+<mac_address/>
+<maintenance_schedule display_value=""/>
+<managed_by display_value=""/>
+<managed_by_group display_value=""/>
+<manufacturer display_value=""/>
+<mid_server/>
+<model_id display_value=""/>
+<model_number/>
+<monitor>false</monitor>
+<name>VLAN10-Servers</name>
+<operational_status>1</operational_status>
+<order_date/>
+<owned_by display_value=""/>
+<po_number/>
+<product_instance_id/>
+<purchase_date/>
+<router display_value=""/>
+<router_interface_type/>
+<schedule display_value=""/>
+<serial_number/>
+<short_description/>
+<skip_sync>false</skip_sync>
+<start_date/>
+<state>Ready</state>
+<subcategory>IP</subcategory>
+<subnet>10.10.10.0</subnet>
+<support_group display_value=""/>
+<supported_by display_value=""/>
+<sys_class_name>cmdb_ci_ip_network</sys_class_name>
+<sys_class_path>/!!/!~</sys_class_path>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-10-30 17:07:41</sys_created_on>
+<sys_domain>global</sys_domain>
+<sys_domain_path>/</sys_domain_path>
+<sys_id>8d0a723883141310404c9defeeaad357</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-10-30 17:07:41</sys_updated_on>
+<unverified>false</unverified>
+<vendor display_value=""/>
+<warranty_expiration/>
+</cmdb_ci_ip_network>
+<cmdb_ci_ip_network action="INSERT_OR_UPDATE">
+<asset display_value=""/>
+<asset_tag/>
+<assigned/>
+<assigned_to display_value=""/>
+<assignment_group display_value=""/>
+<attestation_score/>
+<attestation_status>Not Yet Reviewed</attestation_status>
+<attested>false</attested>
+<attested_by display_value=""/>
+<attested_date/>
+<attributes/>
+<business_unit display_value=""/>
+<can_print>false</can_print>
+<category>Resource</category>
+<change_control display_value=""/>
+<checked_in/>
+<checked_out/>
+<comments/>
+<company display_value=""/>
+<correlation_id/>
+<cost/>
+<cost_cc>USD</cost_cc>
+<cost_center display_value=""/>
+<delivery_date/>
+<department display_value=""/>
+<discover>false</discover>
+<discovery_source/>
+<dns_domain/>
+<due/>
+<due_in/>
+<duplicate_of display_value=""/>
+<environment/>
+<fault_count>0</fault_count>
+<first_discovered/>
+<fqdn/>
+<gl_account/>
+<install_date/>
+<install_status>1</install_status>
+<invoice_number/>
+<ip_address/>
+<justification/>
+<last_discovered/>
+<lease_id/>
+<life_cycle_stage display_value=""/>
+<life_cycle_stage_status display_value=""/>
+<location display_value=""/>
+<mac_address/>
+<maintenance_schedule display_value=""/>
+<managed_by display_value=""/>
+<managed_by_group display_value=""/>
+<manufacturer display_value=""/>
+<mid_server/>
+<model_id display_value=""/>
+<model_number/>
+<monitor>false</monitor>
+<name>VLAN20-Workstations</name>
+<operational_status>1</operational_status>
+<order_date/>
+<owned_by display_value=""/>
+<po_number/>
+<product_instance_id/>
+<purchase_date/>
+<router display_value=""/>
+<router_interface_type/>
+<schedule display_value=""/>
+<serial_number/>
+<short_description/>
+<skip_sync>false</skip_sync>
+<start_date/>
+<state>Ready</state>
+<subcategory>IP</subcategory>
+<subnet>10.10.20.0</subnet>
+<support_group display_value=""/>
+<supported_by display_value=""/>
+<sys_class_name>cmdb_ci_ip_network</sys_class_name>
+<sys_class_path>/!!/!~</sys_class_path>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-10-30 17:08:01</sys_created_on>
+<sys_domain>global</sys_domain>
+<sys_domain_path>/</sys_domain_path>
+<sys_id>b71a363883141310404c9defeeaad34a</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-10-30 17:08:01</sys_updated_on>
+<unverified>false</unverified>
+<vendor display_value=""/>
+<warranty_expiration/>
+</cmdb_ci_ip_network>
+<cmdb_ci_ip_network action="INSERT_OR_UPDATE">
+<asset display_value=""/>
+<asset_tag/>
+<assigned/>
+<assigned_to display_value=""/>
+<assignment_group display_value=""/>
+<attestation_score/>
+<attestation_status>Not Yet Reviewed</attestation_status>
+<attested>false</attested>
+<attested_by display_value=""/>
+<attested_date/>
+<attributes/>
+<business_unit display_value=""/>
+<can_print>false</can_print>
+<category>Resource</category>
+<change_control display_value=""/>
+<checked_in/>
+<checked_out/>
+<comments/>
+<company display_value=""/>
+<correlation_id/>
+<cost/>
+<cost_cc>USD</cost_cc>
+<cost_center display_value=""/>
+<delivery_date/>
+<department display_value=""/>
+<discover>false</discover>
+<discovery_source/>
+<dns_domain/>
+<due/>
+<due_in/>
+<duplicate_of display_value=""/>
+<environment/>
+<fault_count>0</fault_count>
+<first_discovered/>
+<fqdn/>
+<gl_account/>
+<install_date/>
+<install_status>1</install_status>
+<invoice_number/>
+<ip_address/>
+<justification/>
+<last_discovered/>
+<lease_id/>
+<life_cycle_stage display_value=""/>
+<life_cycle_stage_status display_value=""/>
+<location display_value=""/>
+<mac_address/>
+<maintenance_schedule display_value=""/>
+<managed_by display_value=""/>
+<managed_by_group display_value=""/>
+<manufacturer display_value=""/>
+<mid_server/>
+<model_id display_value=""/>
+<model_number/>
+<monitor>false</monitor>
+<name>VLAN30-Management</name>
+<operational_status>1</operational_status>
+<order_date/>
+<owned_by display_value=""/>
+<po_number/>
+<product_instance_id/>
+<purchase_date/>
+<router display_value=""/>
+<router_interface_type/>
+<schedule display_value=""/>
+<serial_number/>
+<short_description/>
+<skip_sync>false</skip_sync>
+<start_date/>
+<state>Ready</state>
+<subcategory>IP</subcategory>
+<subnet>10.10.30.0</subnet>
+<support_group display_value=""/>
+<supported_by display_value=""/>
+<sys_class_name>cmdb_ci_ip_network</sys_class_name>
+<sys_class_path>/!!/!~</sys_class_path>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-10-30 17:08:15</sys_created_on>
+<sys_domain>global</sys_domain>
+<sys_domain_path>/</sys_domain_path>
+<sys_id>283a363883141310404c9defeeaad3fe</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-10-30 17:08:15</sys_updated_on>
+<unverified>false</unverified>
+<vendor display_value=""/>
+<warranty_expiration/>
+</cmdb_ci_ip_network>
+<cmdb_ci_ip_network action="INSERT_OR_UPDATE">
+<asset display_value=""/>
+<asset_tag/>
+<assigned/>
+<assigned_to display_value=""/>
+<assignment_group display_value=""/>
+<attestation_score/>
+<attestation_status>Not Yet Reviewed</attestation_status>
+<attested>false</attested>
+<attested_by display_value=""/>
+<attested_date/>
+<attributes/>
+<business_unit display_value=""/>
+<can_print>false</can_print>
+<category>Resource</category>
+<change_control display_value=""/>
+<checked_in/>
+<checked_out/>
+<comments/>
+<company display_value=""/>
+<correlation_id/>
+<cost/>
+<cost_cc>USD</cost_cc>
+<cost_center display_value=""/>
+<delivery_date/>
+<department display_value=""/>
+<discover>false</discover>
+<discovery_source/>
+<dns_domain/>
+<due/>
+<due_in/>
+<duplicate_of display_value=""/>
+<environment/>
+<fault_count>0</fault_count>
+<first_discovered/>
+<fqdn/>
+<gl_account/>
+<install_date/>
+<install_status>1</install_status>
+<invoice_number/>
+<ip_address/>
+<justification/>
+<last_discovered/>
+<lease_id/>
+<life_cycle_stage display_value=""/>
+<life_cycle_stage_status display_value=""/>
+<location display_value=""/>
+<mac_address/>
+<maintenance_schedule display_value=""/>
+<managed_by display_value=""/>
+<managed_by_group display_value=""/>
+<manufacturer display_value=""/>
+<mid_server/>
+<model_id display_value=""/>
+<model_number/>
+<monitor>false</monitor>
+<name>VLAN40-Guest</name>
+<operational_status>1</operational_status>
+<order_date/>
+<owned_by display_value=""/>
+<po_number/>
+<product_instance_id/>
+<purchase_date/>
+<router display_value=""/>
+<router_interface_type/>
+<schedule display_value=""/>
+<serial_number/>
+<short_description/>
+<skip_sync>false</skip_sync>
+<start_date/>
+<state>Ready</state>
+<subcategory>IP</subcategory>
+<subnet>10.10.40.0</subnet>
+<support_group display_value=""/>
+<supported_by display_value=""/>
+<sys_class_name>cmdb_ci_ip_network</sys_class_name>
+<sys_class_path>/!!/!~</sys_class_path>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2026-10-30 17:08:27</sys_created_on>
+<sys_domain>global</sys_domain>
+<sys_domain_path>/</sys_domain_path>
+<sys_id>204a7a3883141310404c9defeeaad3f0</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2026-10-30 17:08:27</sys_updated_on>
+<unverified>false</unverified>
+<vendor display_value=""/>
+<warranty_expiration/>
+</cmdb_ci_ip_network>
+</unload>
