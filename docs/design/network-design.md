@@ -42,3 +42,54 @@ Tested: 8 tests, all passed (see phases/01 notes).
 ## 5. Known limitations
 - RRAS filters are stateless, so Management can't yet manage Guest devices (replies are dropped). Fixed by pfSense in Phase 4.
 - Single router = single point of failure. Acceptable for a lab.
+
+## 6. Identity (Active Directory)
+
+**Domain:** corp.lab.internal (one forest, one domain). Domain controller: DC01 (10.10.10.10), also the DNS server.
+
+### OU tree
+CORP is the top level. Everything the company creates lives under it, so it's kept apart from Windows' built-in containers.
+
+    corp.lab.internal
+    └── CORP
+        ├── Users
+        │   ├── Finance
+        │   ├── HR
+        │   ├── Sales
+        │   └── IT
+        ├── Computers
+        │   ├── Workstations
+        │   ├── Servers
+        │   └── Admin Workstations
+        ├── Groups
+        ├── Service Accounts
+        └── Admin Accounts
+
+### Naming standards
+| Object | Pattern | Example |
+|---|---|---|
+| Normal user | first.last | sarah.khan |
+| Admin account (separate from the daily account) | adm-first.last | adm-eesa.ali |
+| Role group (who people are) | GG_Dept_Role | GG_Finance_Staff |
+| Resource group (what they can access) | DL_Resource_Access | DL_FinanceShare_RW |
+| Classic service account | svc-purpose | svc-web |
+| Managed service account (gMSA) | gmsa-purpose | gmsa-uptime |
+| Group Policy | GPO_Scope_Purpose | GPO_WS_Baseline |
+
+### Group model (AGDLP)
+Accounts go into Global role groups, Global groups go into Domain Local resource groups, and Permissions are only ever granted to the resource groups.
+Example: sarah.khan → GG_Finance_Staff → DL_FinanceShare_RW → Modify on the Finance share.
+Why: when someone changes roles, you change one group membership, not dozens of permissions.
+
+### GPO inventory
+| GPO | Purpose | Linked to |
+|---|---|---|
+| GPO_Domain_Password | Password and lockout policy | Domain root (password policy only works there) |
+| GPO_WS_Baseline | Logon banner, block USB storage, firewall on with logging | CORP/Computers/Workstations |
+| GPO_SRV_Firewall | RDP and WinRM only from 10.10.30.0/24 | CORP/Computers/Servers + Domain Controllers |
+| GPO_All_Audit | Advanced audit: logons, account changes, process creation | CORP/Computers + Domain Controllers |
+| GPO_All_PSLogging | PowerShell module and script block logging | CORP/Computers + Domain Controllers |
+| GPO_User_DriveMaps | Map department shares, targeted by group | CORP/Users |
+| GPO_SVC_DenyLogon | Service accounts can't log on interactively | CORP/Computers + Domain Controllers |
+
+Note: DC01 lives in the built-in Domain Controllers OU, not CORP/Computers/Servers, so server GPOs are linked there too.
