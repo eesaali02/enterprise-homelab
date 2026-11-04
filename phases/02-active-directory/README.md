@@ -30,4 +30,11 @@
 * Tests: google.com resolves, 10.10.10.10 reverse-resolves to DC01.
 ![DNS Forwarders](screenshots/set-dns-forwarders.png)
 
-
+## 2026-11-04 - Build the OU tree
+* Created CORP and its five children in the GUI to match the design doc (docs\netowrk-desing.md).
+![CORP OU and Children](screenshots/corp-and-children.png)
+ *Created sub OU's beneath Users and Computers using PowerShell.
+![Sub OU's](screenshots\sub-ous.png)
+*Redirected new computers by default to the workstations OU using DN (Distinguished Name) that maps the path to the OU.
+![Redirect Computers](screenshots/redirect-computers.png)
+![Final OU Tree](screenshots/ou-tree.png)
