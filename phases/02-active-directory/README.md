@@ -14,3 +14,20 @@
 * Domain admin login: CORP\Administrator.
 * Checked: Get-ADDomain shows corp.lab.internal, DC01 is a Global Catalog at 10.10.10.10.
 ![DCO1 Promoted](screenshots/dc01-promoted.png)
+
+## 2026-11-04 – AD and DNS health
+* dcdiag issue: "DC01 is not advertising as a time server" (Advertising + LocatorCheck failed).
+  - Why it matters: Kerberos logins fail if a PC's clock is more than 5 minutes off the DC.
+  - Cause: Hyper-V time sync was overriding the DC's clock, and the DC wasn't set as a reliable source.
+  - Fix: disabled Hyper-V Time Synchronization for DC01 (Microsoft best practice for virtual DCs), then w32tm /config /manualpeerlist:"time.windows.com,0x8 pool.ntp.org,0x8" /syncfromflags:manual /reliable:yes /update.
+* DFSREvent and SystemLog errors were from the first boot after promotion. They clear after 24 hours.
+
+* SRV record _ldap._tcp.dc._msdcs.corp.lab.internal points to DC01 on port 389. This is how clients find a domain controller, which is why failed domain joins are usually DNS problems.
+![Resolve DNS Name](screenshots/resolve-dns-name.png)
+* Reverse lookup zones added for 10.10.10, 10.10.20, 10.10.30, plus a PTR record for DC01.
+![Reverse Lookup Records](screenshots/reverse-lookup-zones.png)
+* DNS forwarders: 1.1.1.1 and 8.8.8.8 (CORE-RTR01 doesn't run DNS). To be changed to LNX-SVC01 in Phase 3.
+* Tests: google.com resolves, 10.10.10.10 reverse-resolves to DC01.
+![DNS Forwarders](screenshots/set-dns-forwarders.png)
+
+
