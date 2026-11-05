@@ -38,3 +38,42 @@
 *Redirected new computers by default to the workstations OU using DN (Distinguished Name) that maps the path to the OU.
 ![Redirect Computers](screenshots/redirect-computers.png)
 ![Final OU Tree](screenshots/ou-tree.png)
+
+## 2026-11-05 – Users and groups (AGDLP)
+
+### Users
+* Created sarah.khan by hand in ADUC first, to see every field a new user needs.
+* Created the rest with scripts/powershell/New-LabUsers.ps1, which reads scripts/powershell/users.csv (FirstName, LastName, Department) and creates each user in their department OU.
+  - Logon name built as first.last (lower case), UPN first.last@corp.lab.internal.
+  - Starting password typed in at runtime with Read-Host -AsSecureString, never stored in the script or the CSV.
+  - Accounts enabled, and must change password at first logon.
+  - Tested with -WhatIf before running for real.
+* Copied the files into DC01 with Copy-VMFile (later, scripts will run from MGMT01).
+![Users created](screenshots/users-created.png)
+
+### Groups
+| Group | Scope | Type | Members |
+|---|---|---|---|
+| GG_Finance_Staff / GG_HR_Staff / GG_Sales_Staff / GG_IT_Staff | Global | Security | Users from each department OU |
+| GG_Helpdesk | Global | Security | One IT user (for Task 7) |
+| DL_FinanceShare_RW | Domain Local | Security | GG_Finance_Staff |
+| DL_FinanceShare_R | Domain Local | Security | (empty, ready for read-only access) |
+
+* Security vs Distribution: only Security groups can be given permissions. Distribution groups are for email lists.
+* Filled the department groups with one loop: each OU name matches its group name (Finance → GG_Finance_Staff).
+
+### Finance share
+* Folder C:\Shares\Finance, shared as \\DC01\Finance.
+* Share permissions: Authenticated Users = Change, Administrators = Full. Kept simple on purpose, with real control in NTFS.
+* NTFS on C:\Shares\Finance: inheritance disabled, Users removed, DL_FinanceShare_RW = Modify, DL_FinanceShare_R = Read & execute, Administrators/SYSTEM = Full.
+* Share and NTFS permissions combine, and the most restrictive wins.
+* Mistake fixed: first set NTFS on the parent C:\Shares instead of C:\Shares\Finance. Moved it to the Finance folder, so future department folders don't inherit Finance's permissions.
+
+### Test (Effective Access)
+| User | Expected | Result |
+|---|---|---|
+| Finance user | Modify | Modify |
+| HR user | No access | No access |
+
+![Finance user](screenshots/finance-effective-access.png)
+![HR user](screenshots/hr-effective-access.png)
