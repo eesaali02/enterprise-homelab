@@ -1,0 +1,1 @@
+redircmp "OU=Workstations,OU=Computers,OU=CORP,DC=corp,DC=lab,DC=internal"
