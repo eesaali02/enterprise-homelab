@@ -77,3 +77,49 @@
 
 ![Finance user](screenshots/finance-effective-access.png)
 ![HR user](screenshots/hr-effective-access.png)
+
+## 2026-11-05 – Built WS01 and joined it to the domain
+
+### Build
+* Gen 2, 2 vCPU, 4 GB startup RAM (dynamic, min 2 GB, max 4 GB), 64 GB disk, LAB-CORE VLAN 20.
+* Windows 11 Enterprise Evaluation. Windows 11 needs a TPM, so I turned on the virtual TPM in Hyper-V (Settings > Security) before first boot.
+
+### Network
+| Setting | Value |
+|---|---|
+| Adapter name | VLAN20-Workstations |
+| IP | 10.10.20.50/24 (temporary static until DHCP in Phase 3) |
+| Gateway | 10.10.20.1 |
+| DNS | 10.10.10.10 (DC01) |
+
+* Why DNS must be DC01: clients find a domain controller by asking DNS for its SRV records (_ldap._tcp.dc._msdcs.corp.lab.internal), and those only exist in DC01's DNS. Public DNS (1.1.1.1) has never heard of corp.lab.internal, so the join would fail. That's why most failed joins are DNS problems.
+* Tested before joining: ping 10.10.10.10 and Resolve-DnsName corp.lab.internal both worked.
+
+### Domain join (GUI)
+* sysdm.cpl > Change: renamed to WS01 and joined corp.lab.internal with CORP\Administrator, then restarted.
+* WS01 landed in CORP > Computers > Workstations, which proves the redircmp from Task 4 works.
+* First login as a domain user (CORP\sarah.khan) forced a password change. That's because the script set "must change password at next logon": the admin knew the starting password, so the user sets one only they know.
+
+![WS01 joined](screenshots/ws01-joined.png)
+
+## 2026-11-05 – Built MGMT01 and joined it to the domain
+
+### Build
+* Same specs as WS01, but in LAB-CORE VLAN 30.
+
+### Network
+| Setting | Value |
+|---|---|
+| Adapter name | VLAN30-Management |
+| IP | 10.10.30.20/24 (from IPAM sheet) |
+| Gateway | 10.10.30.1 |
+| DNS | 10.10.10.10 (DC01) |
+
+### Domain join (PowerShell)
+* Command: Add-Computer -DomainName corp.lab.internal -NewName MGMT01 -Credential CORP\Administrator -Restart (renames, joins and restarts in one step, with one reboot instead of two).
+* Mistake along the way:
+  - Put Rename-Computer and Add-Computer on one line with no ; between them, so PowerShell read the second command as a value for the first.
+* Problem: the domain join succeeded, but the rename failed ("directory service is busy"). The earlier Rename-Computer had already queued a rename waiting on a restart, and it clashed with -NewName.
+* Fix: restarted, logged in as .\localadmin, then [renamed with Rename-Computer -NewName MGMT01 -DomainCredential CORP\Administrator -Restart
+* Lesson: restart after every rename before doing anything else, and rename a domain-joined PC with -DomainCredential so AD is updated too.
+* Checked: MGMT01 appears in CORP > Computers > Workstations with no leftover DESKTOP-... object.
