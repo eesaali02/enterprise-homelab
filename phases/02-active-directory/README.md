@@ -123,3 +123,20 @@
 * Fix: restarted, logged in as .\localadmin, then [renamed with Rename-Computer -NewName MGMT01 -DomainCredential CORP\Administrator -Restart
 * Lesson: restart after every rename before doing anything else, and rename a domain-joined PC with -DomainCredential so AD is updated too.
 * Checked: MGMT01 appears in CORP > Computers > Workstations with no leftover DESKTOP-... object.
+
+## 2026-11-08 – MGMT01 as the admin workstation
+
+### Moved to Admin Workstations
+* Moved MGMT01 from CORP > Computers > Workstations to CORP > Computers > Admin Workstations, so it'll get admin-PC policies instead of normal workstation ones.
+* Why redircmp didn't put it there automatically: It was setup to put all computers into CORP > Computers > Workstations.
+
+### Separate admin account
+* Created adm-eesa.ali in CORP > Admin Accounts and added it to Domain Admins.
+* Domain Admins = built-in group with full control of the whole domain (every user, PC, DC and GPO). It lives in the built-in Users container.
+* The Admin Accounts OU only organizes accounts. Membership of the Domain Admins group is what grants the rights.
+* Why a separate admin account: ...
+
+### RSAT on MGMT01
+* Logged in as CORP\adm-eesa.ali and installed RSAT: Active Directory, Group Policy Management, DNS.
+* Checked: ADUC on MGMT01 shows the whole domain, and Get-ADUser works from MGMT01.
+* From now on, admin work is done from MGMT01, not on DC01's console.
