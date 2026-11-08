@@ -140,3 +140,29 @@
 * Logged in as CORP\adm-eesa.ali and installed RSAT: Active Directory, Group Policy Management, DNS.
 * Checked: ADUC on MGMT01 shows the whole domain, and Get-ADUser works from MGMT01.
 * From now on, admin work is done from MGMT01, not on DC01's console.
+
+
+## 2026-11-08 – Delegated helpdesk permissions
+Done from MGMT01 as adm-eesa.ali, using the Delegation of Control Wizard in ADUC.
+
+| Delegated on | To | Rights |
+|---|---|---|
+| CORP > Users | GG_Helpdesk | Reset passwords and force change at next logon (common task) |
+| CORP > Users | GG_Helpdesk | Read/Write lockoutTime on User objects (custom task, so they can unlock accounts) |
+| CORP > Computers > Workstations | GG_Helpdesk | Create/Delete computer objects, reset password, validated write to DNS host name and SPN (so they can join PCs) |
+
+* Delegated on CORP > Users (not the built-in Users container), so it covers every department OU, including future ones, but not Admin Accounts.
+* Unlocking = clearing the lockoutTime property, which is why it's a property-specific permission.
+* Why delegate to a group, not a person: ...
+
+### Test (as the helpdesk user, using runas)
+| Action | Expected | Result |
+|---|---|---|
+| Reset joe.bob's password (Finance) | Allowed | Succeeded |
+| Reset adm-eesa.ali's password | Denied | Access is denied |
+
+* Denied for two reasons: Admin Accounts is outside the delegated OU, and AdminSDHolder automatically protects members of privileged groups like Domain Admins.
+* Real helpdesk procedure: set a temporary password AND force a change at next logon, so the user can log in but only they know the final password.
+
+![User test](screenshots/reset-password-adm.png)
+![Admin test](screenshots/reset-password-user.png)
