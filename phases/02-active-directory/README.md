@@ -166,3 +166,10 @@ Done from MGMT01 as adm-eesa.ali, using the Delegation of Control Wizard in ADUC
 
 ![User test](screenshots/reset-password-adm.png)
 ![Admin test](screenshots/reset-password-user.png)
+
+## 2026-11-09 – Incident: no routing after restart 
+* Symptom: ADUC on MGMT01 showed "server is not operational". DC01 and MGMT01 had no internet. Login still worked thanks to cached credentials, which hid the problem.
+* Troubleshooting: both VMs were running, so I checked the device they share, CORE-RTR01.
+* Root cause: the RemoteAccess (RRAS) service was stopped.
+* Fix: Start-Service RemoteAccess; Set-Service RemoteAccess -StartupType Automatic.
+* Lesson: when several machines in different networks fail at once, check what they have in common first.
