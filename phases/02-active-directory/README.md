@@ -167,9 +167,71 @@ Done from MGMT01 as adm-eesa.ali, using the Delegation of Control Wizard in ADUC
 ![User test](screenshots/reset-password-adm.png)
 ![Admin test](screenshots/reset-password-user.png)
 
-## 2026-11-09 – Incident: no routing after restart 
+## 2026-11-09 – Incident: no routing after restart (INC0010001)
 * Symptom: ADUC on MGMT01 showed "server is not operational". DC01 and MGMT01 had no internet. Login still worked thanks to cached credentials, which hid the problem.
 * Troubleshooting: both VMs were running, so I checked the device they share, CORE-RTR01.
 * Root cause: the RemoteAccess (RRAS) service was stopped.
 * Fix: Start-Service RemoteAccess; Set-Service RemoteAccess -StartupType Automatic.
 * Lesson: when several machines in different networks fail at once, check what they have in common first.
+
+## 2026-11-09 – Service accounts, part 1: svc-web and Kerberoasting
+
+### Classic service account: svc-web
+* Created in CORP > Service Accounts using ADUC 
+* For the intranet web server, LNX-WEB01, in Phase 3.
+* Password: 30+ random characters from KeePassXC, stored only there.
+* Settings:
+  - User must change password at next logon: OFF (a service can't answer a password-change prompt, so it would fail to start)
+  - User cannot change password: OFF (Password must not be changed by a user for a service account)
+  - Password never expires: ON (if it expired, the web service would shut off without warning. The trade-off is that the password never changes on it's own. Risk can be reduced by making it long, rotate it manually, or use gSMA (next step)
+* Description on the account: purpose, owner, link to docs/service-accounts.md.
+
+### SPN
+* Registered: setspn -S HTTP/lnx-web01.corp.lab.internal CORP\svc-web
+* SPN = Service Principal Name: a label (service/host) that tells Kerberos which account runs a service, so the DC knows whose password to lock the service ticket with.
+
+### Kerberoasting check (looking only, no attack)
+* Logged in to WS01 as a normal user (sarah.khan) and ran setspn -Q */* : any domain user can list every account with an SPN.
+* Computer accounts (DC01, WS01, MGMT01) have SPNs too, but their passwords are long, random and rotate every 30 days, so they're not realistic targets.
+* svc-web is the only USER account with an SPN, so it's the obvious Kerberoasting target.
+* I learned: Kerberoasting is a cyberattack that targets Kerberos authentication is AD and allows an attacker to steal account credentials without administrative access and without triggering account lockouts.
+* Defence: long random passwords on service accounts, or better, gMSAs (240-character passwords rotated automatically).
+
+![setspn query as a normal user](screenshots/setspn-query.png)
+
+## 2026-11-10 – Service accounts, part 2: gMSA
+
+### KDS root key (on DC01, once per domain)
+* Add-KdsRootKey -EffectiveTime ((Get-Date).AddHours(-10))
+* The KDS root key is the master secret DC01 uses to calculate gMSA passwords.
+* Normally it isn't usable for 10 hours, so every DC can receive a copy. Backdated by 10 hours because this lab has only one DC. In a real company: Add-KdsRootKey -EffectiveImmediately, then wait 10 hours.
+
+![KDS root key](screenshots/gmsa-kds-key.png)
+
+### Created gmsa-uptime
+* New-ADServiceAccount -Name "gmsa-uptime" -DNSHostName "gmsa-uptime.corp.lab.internal" -Path "OU=Service Accounts,OU=CORP,DC=corp,DC=lab,DC=internal" -PrincipalsAllowedToRetrieveManagedPassword 'MGMT01$'
+* No password was ever set or seen. Windows generates a 240-character password and rotates it every 30 days.
+* Only MGMT01 is allowed to retrieve the password from DC01. The account is useless from any other machine.
+* 'MGMT01$' in single quotes: computer accounts end in $, and single quotes stop PowerShell from reading $ as a variable.
+* Real companies usually allow a group of servers instead of one named computer, so hosts can be added without editing the gMSA.
+
+![gMSA created](screenshots/gmsa-created.png)
+
+### Installed and tested on MGMT01
+* Install-ADServiceAccount gmsa-uptime, then Test-ADServiceAccount gmsa-uptime returned True.
+* Will run the uptime monitor scheduled task in Phase 6.
+
+![gMSA test](screenshots/gmsa-test-true.png)
+
+### svc-web vs gmsa-uptime
+| | svc-web (classic) | gmsa-uptime (gMSA) |
+|---|---|---|
+| Who knows the password | Admin (stored in KeePassXC) | Nobody |
+| Password length | 30+ characters | 240 characters |
+| Rotation | Manual (yearly, or when someone leaves) | Automatic every 30 days, no outage |
+| Where it can be used | Anywhere the password is typed | Only on MGMT01 |
+| Kerberoasting risk | Low with a strong password, but never zero | Practically uncrackable |
+
+* In my own words, a gMSA is safer than svc-web because ...
+
+
