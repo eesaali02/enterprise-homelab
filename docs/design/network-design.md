@@ -28,7 +28,8 @@ Full detail: ipam/lab-ipam.xlsx
 - The router knows the four networks through connected routes (created automatically from each adapter's IP and mask). A default route via OUTSIDE handles everything else.
 - NAT on OUTSIDE lets the whole lab share one outside address to reach the internet.
 
-![Logical diagram](docs/diagrams/logical.png)
+![Logical diagram](../../docs/diagrams/logical.png)
+
 
 ## 4. Security policy
 Full policy: docs/traffic-policy.md. Default rule: block anything not explicitly allowed.
