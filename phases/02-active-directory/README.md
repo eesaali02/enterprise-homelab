@@ -206,8 +206,6 @@ Done from MGMT01 as adm-eesa.ali, using the Delegation of Control Wizard in ADUC
 * The KDS root key is the master secret DC01 uses to calculate gMSA passwords.
 * Normally it isn't usable for 10 hours, so every DC can receive a copy. Backdated by 10 hours because this lab has only one DC. In a real company: Add-KdsRootKey -EffectiveImmediately, then wait 10 hours.
 
-![KDS root key](screenshots/gmsa-kds-key.png)
-
 ### Created gmsa-uptime
 * New-ADServiceAccount -Name "gmsa-uptime" -DNSHostName "gmsa-uptime.corp.lab.internal" -Path "OU=Service Accounts,OU=CORP,DC=corp,DC=lab,DC=internal" -PrincipalsAllowedToRetrieveManagedPassword 'MGMT01$'
 * No password was ever set or seen. Windows generates a 240-character password and rotates it every 30 days.
@@ -232,6 +230,6 @@ Done from MGMT01 as adm-eesa.ali, using the Delegation of Control Wizard in ADUC
 | Where it can be used | Anywhere the password is typed | Only on MGMT01 |
 | Kerberoasting risk | Low with a strong password, but never zero | Practically uncrackable |
 
-* In my own words, a gMSA is safer than svc-web because ...
+* In my own words, a gMSA is safer than svc-web because it rotates a password known to no one every 30 days. Only certain computers (or server groups) can acces the gSMA.
 
 
