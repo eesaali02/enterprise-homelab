@@ -230,6 +230,6 @@ Done from MGMT01 as adm-eesa.ali, using the Delegation of Control Wizard in ADUC
 | Where it can be used | Anywhere the password is typed | Only on MGMT01 |
 | Kerberoasting risk | Low with a strong password, but never zero | Practically uncrackable |
 
-* In my own words, a gMSA is safer than svc-web because it rotates a password known to no one every 30 days. Only certain computers (or server groups) can acces the gSMA.
+* In my own words, a gMSA is safer than svc-web because it rotates a password known to no one every 30 days. Only certain computers (or server groups) can access the gSMA.
 
 

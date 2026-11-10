@@ -1,0 +1,16 @@
+# 004: GPO Change Request
+
+**Date:** 2026-11-10
+
+## Context
+Building 7 GPOs, the plan says one change per GPO (7 changes).
+
+## Options considered
+- One change per GPO
+- One change with 7 Change Tasks
+
+## Decision
+One Normal change, “Group Policy baseline”, with a Change Task per GPO. Still tracks each GPO separately, teaches you Change Tasks, and saves time
+
+## Consequences
+-7 separate normal changes is most realistic for a strict company, but about 5 minutes of admin each. Behind schedule, and it’s a genuine ServiceNow feature companies use for multi-part work.
