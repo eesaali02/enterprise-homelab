@@ -232,4 +232,64 @@ Done from MGMT01 as adm-eesa.ali, using the Delegation of Control Wizard in ADUC
 
 * In my own words, a gMSA is safer than svc-web because it rotates a password known to no one every 30 days. Only certain computers (or server groups) can access the gSMA.
 
+## 2026-11-10 – Group Policy change (CHG0030006)
+* Decision: one Normal change for the whole GPO baseline, with one Change Task per GPO, instead of 7 separate changes. Each GPO is still tracked, tested and closed on its own, with less admin overhead.
+* Checkpoint "CHG0030006-before-GPOs" taken on DC01 (backout plan).
+
+
+## 2026-11-10 – GPO 1: GPO_Domain_Password
+* Created in GPMC on MGMT01, linked at the domain root (corp.lab.internal), moved to link order 1 above Default Domain Policy (lower link order wins).
+* Why the domain root: DCs only read password policy for domain accounts from GPOs linked at domain level. Linked to an OU, it would only affect local accounts. (For different rules per group, use Fine-Grained Password Policies.)
+
+| Setting | Value | Why |
+|---|---|---|
+| Minimum length | 14 | Length matters most for strength (NIST) |
+| Complexity | Enabled | Still expected by auditors and older systems |
+| Password history | 24 | Stops reuse of old passwords |
+| Minimum age | 1 day | Stops users cycling through 24 changes to get an old password back |
+| Maximum age | 0 (never expires) | NIST: only force a change if compromised; forced changes create weak patterns |
+| Lockout threshold | 5 attempts | Stops guessing, tolerates typos |
+| Lockout duration | 15 min | Unlocks itself, fewer helpdesk calls |
+| Reset counter after | 15 min | Failed attempts forgotten after 15 min |
+
+![Password policy](screenshots/gpo1-password-policy.png)
+
+### Test
+| Step | Expected | Result |
+|---|---|---|
+| gpupdate /force on DC01, then Get-ADDefaultDomainPasswordPolicy | Values match the table | Match |
+| 5 wrong passwords for sarah.khan on WS01 | Account locked | "Account is currently locked out" |
+| Search-ADAccount -LockedOut | sarah.khan listed | Listed |
+| Unlock-ADAccount as buzz.lightyear (helpdesk, checked with whoami) | Allowed by Task 7 delegation | Unlocked, Search-ADAccount now empty |
+
+* New and reset passwords (including helpdesk temporary passwords) must now be 14+ characters. Existing passwords keep working until they're next changed.
+* Lockouts create Event ID 4740 on DC01, which the SIEM will alert on in Phase 7.
+
+![Locked out](screenshots/gpo1-locked-out.png)
+![Locked accounts](screenshots/gpo1-search-locked.png)
+![Helpdesk unlock](screenshots/gpo1-helpdesk-unlock.png)
+
+## 2026-11-10 – GPO 2: GPO_WS_Baseline
+* Created in GPMC on MGMT01, linked to CORP > Computers > Workstations. (MGMT01 is in Admin Workstations, so it doesn't get this GPO; admin PCs get their own treatment.)
+
+| Setting | Location | Value | Why |
+|---|---|---|---|
+| Logon banner title + text | Security Options > Interactive logon: Message title / text | "Authorized use only" + warning | Users can't claim they didn't know the rules; supports action against misuse |
+| Block USB storage | Admin Templates > System > Removable Storage Access | All classes: Deny all access | Stops data leaving on USB sticks and malware coming in |
+| Firewall | Windows Defender Firewall > Properties (Domain, Private, Public) | On, inbound Block, outbound Allow | Default deny for incoming connections |
+| Firewall logging | Same, Logging > Customize | Log dropped packets, 16 MB, pfirewall.log | Evidence for troubleshooting and the SIEM (Phase 7) |
+| Inbound rule | Inbound Rules | Allow ICMPv4 from 10.10.30.0/24 only | Only IT (Management VLAN) can ping workstations |
+
+* Workstation-to-workstation traffic (traffic policy: "Nothing") is already covered by inbound Block, so no extra rule was needed.
+
+### Verified on WS01
+* gpupdate /force, then gpresult /r /scope computer: GPO_WS_Baseline listed under Applied Group Policy Objects.
+* USB: Deny_All = 1 in HKLM\SOFTWARE\Policies\Microsoft\Windows\RemovableStorageDevices.
+* Firewall: Get-NetFirewallProfile -PolicyStore ActiveStore shows Enabled and LogBlocked True on all profiles.
+* Rule: "Allow ping from Management VLAN" active.
+* Logon banner shows before login.
+
+### Not tested
+* Ping from MGMT01 (expected: allowed) and from DC01 (expected: blocked). The 16 GB host is too slow running four VMs at once. The rule's presence and scope were verified on WS01 instead. To re-test later with lighter VMs, use Kali on VLAN 30 as the Management client.
+
 
