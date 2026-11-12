@@ -293,3 +293,36 @@ Done from MGMT01 as adm-eesa.ali, using the Delegation of Control Wizard in ADUC
 * Ping from MGMT01 (expected: allowed) and from DC01 (expected: blocked). The 16 GB host is too slow running four VMs at once. The rule's presence and scope were verified on WS01 instead. To re-test later with lighter VMs, use Kali on VLAN 30 as the Management client.
 
 
+## 2026-11-12 – GPO 3: GPO_SRV_Firewall
+* Linked to CORP > Computers > Servers (empty for now) and Domain Controllers (DC01 isn't in the Servers OU).
+* Enabled Remote Desktop: Admin Templates > Windows Components > Remote Desktop Services > Remote Desktop Session Host > Connections > Allow users to connect remotely.
+* Also added firewall logging (dropped packets) to this GPO, because the logging in GPO_WS_Baseline only reaches the Workstations OU.
+
+### Firewall rules
+| Rule | Ports | From | Action |
+|---|---|---|---|
+| Allow RDP and WinRM from Management VLAN | TCP 3389, 5985 | 10.10.30.0/24 | Allow |
+| Block RDP and WinRM from non-Management VLANs | TCP 3389, 5985 | 10.10.10.0/24, 10.10.20.0/24, 10.10.40.0/24 | Block |
+
+* Why two rules: GPO rules are added to the built-in local rules, and Windows Server has local rules allowing WinRM from anywhere. With allow rules, one allow is enough, so an allow-only GPO wouldn't restrict anything. Block rules always win over allow rules, so the block rule enforces the policy without disabling the local rules Active Directory needs (DNS, Kerberos, LDAP).
+
+![Rules active on DC01](screenshots/inbound_rules_dc01.png)
+
+### Tests (one client at a time because of RAM)
+| From | To | Port | Expected | Result |
+|---|---|---|---|---|
+| MGMT01 (10.10.30.20) | DC01 | 3389 RDP | Allowed | TcpTestSucceeded True |
+| MGMT01 (10.10.30.20) | DC01 | 5985 WinRM | Allowed | TcpTestSucceeded True, Enter-PSSession opened |
+| WS01 (10.10.20.50) | DC01 | 3389 RDP | Blocked | TcpTestSucceeded False |
+| WS01 (10.10.20.50) | DC01 | 5985 WinRM | Blocked | TcpTestSucceeded False |
+
+* WS01's ping to DC01 still succeeded, so DC01 was reachable. Only the admin ports were blocked, which proves the block rule (not a network problem) caused the failure.
+
+![MGMT01 allowed](screenshots/gpo3-mgmt-test.png)
+![WS01 blocked](screenshots/gpo3-test-ws01.png)
+
+### Troubleshooting: firewall log missing on DC01
+* gpresult showed the GPO applied, and Get-NetFirewallProfile showed LogBlocked True with the right path, but the folder C:\Windows\System32\LogFiles\Firewall didn't exist.
+* Root cause: Windows Firewall writes into the log folder but doesn't create it, and it was missing on this fresh Server 2025 install.
+* Fix: created the folder and granted NT SERVICE\mpssvc Modify with icacls. Long-term fix: a Group Policy Preference (Folders) to create it on every server.
+* Open item: [log file now created after restart / still not created]. Blocked connections will also be checked as Event ID 5152 once the audit policy (GPO 4) is in place.
