@@ -1,0 +1,4 @@
+## 2026-11-22 – Host RAM upgrade
+* Upgraded HOST01 from 16 GB to 32 GB (method: desktop DIMMs), now running at 3200 MHz.
+* Reason: 16 GB couldn't run DC01, WS01 and MGMT01 together, and Phases 5 and 7 need even more.
+* Raised VM minimum memory so Dynamic Memory doesn't starve them: DC01 2-4 GB, MGMT01 2-6 GB. SIEM01 will get 8 GB in Phase 7.
