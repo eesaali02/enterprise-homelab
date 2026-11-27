@@ -1,0 +1,44 @@
+# 005: Host Storage Upgrade (Lab VMs on NVMe SSD)
+
+**Status:** Accepted, implemented
+**Date:** November 2026
+**Supersedes:** [002: VM Storage](002-vm-storage.md)
+**Related change:** Storage upgrade on HOST01
+
+## Context
+
+Decision 002 put all lab VMs on the E: drive (a SATA hard drive), because the original boot SSD, a Kingston A2000 250 GB, was too small to hold them.
+
+After the host RAM was upgraded to 32 GB, memory was no longer the limit; the hard drive was. With DC01, CORE-RTR01, WS01 and MGMT01 running, Task Manager showed the hard drive at **100% active time**, transferring only about **15 MB/s**. VMs took minutes to boot, consoles lagged, and Group Policy testing slowed down a lot. Five VMs were sharing one mechanical disk, and random I/O was the bottleneck.
+
+## Options considered
+
+| Option | Pros | Cons |
+|---|---|---|
+| Keep the VMs on the HDD and run fewer at once | No cost | Doesn't fix the bottleneck; blocks multi-VM testing (GPOs, firewall, auditing) |
+| Move only the busiest VMs (DC01, CORE-RTR01) to the existing 250 GB SSD | No cost | Not enough space for the OS plus VMs; no room for checkpoints |
+| **Replace the boot SSD with a 1 TB NVMe and move everything to it** | Removes the bottleneck; room for all VMs, checkpoints and growth | About $218; needs an OS migration |
+
+## Decision
+
+Replace the Kingston A2000 250 GB with a **Lexar EQ790 1 TB NVMe SSD** and run the host OS and all lab VMs from it.
+
+- **Fresh install of Windows 11 Pro instead of cloning.** The free cloning tool couldn't clone to a USB-attached target, and the old install's boot files were on the HDD (MBR/CSM). A clean install fixed both problems.
+- **Modern boot setup:** UEFI with a GPT disk, Secure Boot on with the factory keys, and the AMD firmware TPM on.
+- **New VM location:** `C:\HomeLab\VMs\<VMName>\`, one folder per VM, set as the Hyper-V default.
+- **The HDD (E:)** is kept for backups and bulk storage, not for running VMs.
+
+## Implementation notes
+
+- The VMs were imported as copies (`Import-VM -Copy`), using `-VhdSourcePath` because the original disks weren't in a `Virtual Hard Disks` subfolder. The originals on E: were left untouched as the backout copy.
+- **DC01 and CORE-RTR01 checkpoints:** their saved memory states used CPU features the new install didn't expose (Hyper-V error 24004). Only the saved memory was removed; the checkpoint disks were kept.
+- **WS01 and MGMT01 (vTPM):** the virtual TPMs were sealed with "Shielded VM Local Certificates" that only existed in the old Windows install. Each VM was rebuilt with the same settings around its existing disk, with a new key protector and vTPM. Static IPs were set again on the new adapters. Domain trust (`Test-ComputerSecureChannel`) and Group Policy were confirmed afterwards.
+- **Certificate backup:** the new host's Shielded VM certificates were exported to password-protected `.pfx` files and stored outside the repo (password in KeePassXC).
+- The host was renamed to **HOST01** to match the naming convention ([003](003-naming-convention.md)) and the CMDB.
+
+## Consequences
+
+**Positive**
+- All five VMs boot and respond quickly, and the disk is no longer the bottleneck.
+- There's room for checkpoints and future VMs (e.g. additional servers).
+- The host now uses
