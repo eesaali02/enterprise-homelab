@@ -361,8 +361,8 @@ Done from MGMT01 as adm-eesa.ali, using the Delegation of Control Wizard in ADUC
 |---|---|---|---|---|
 | 1 | Run `whoami /groups` | WS01 | 4688 with the full command line | ✅ Pass |
 | 2 | Two failed logons for `joe.bob` | WS01 / DC01 | 4625 (WS01), 4771 Status 0x18 (DC01) | ✅ Pass |
-| 3 | Add and remove a user from a group | DC01 | 4728 / 4729 | Pending |
-| 4 | Blocked connection to a server | DC01 | 5152 (also closes the GPO 3 firewall log item) | Pending |
+| 3 | Add and remove a user from a group | DC01 | 4728 / 4729 | ✅ Pass |
+| 4 | Blocked connection to a server | DC01 | 5152 (also closes the GPO 3 firewall log item) | ✅ Pass |
 
 #### Test 1: Process creation 
 
@@ -397,3 +397,29 @@ Both failures were then logged with Status `0x18` (bad password) from `10.10.20.
 
 **Lesson:** a GPO linked to an OU doesn't reach domain controllers. The DCs, the most important machines to audit, need their own link.
 
+#### Test 3: Group membership changes
+
+On DC01, added `joe.bob` to `GG_HR_Staff` and removed him again:
+
+```powershell
+Add-ADGroupMember -Identity GG_HR_Staff -Members joe.bob
+Remove-ADGroupMember -Identity GG_HR_Staff -Members joe.bob -Confirm:$false
+```
+
+Both changes were logged: **4728** (added) and **4729** (removed), each showing the member, the group, and who made the change (`adm-eesa.ali`). Using named admin accounts instead of a shared Administrator makes every change traceable to a person.
+
+![Events 4728 and 4729 on DC01](screenshots/gp04-4728-4729-test.png)
+
+#### Test 4: Firewall packet drop 
+
+From WS01, tried to connect to RDP on DC01. GPO_SRV_Firewall only allows RDP from the Management VLAN, so the connection failed:
+
+```powershell
+Test-NetConnection 10.10.10.10 -Port 3389
+```
+
+![RDP from WS01 blocked](screenshots/gp04-ws01-rdp-blocked.png)
+
+DC01 logged **5152** for each dropped attempt, from `10.10.20.50` (WS01) to port 3389. TCP retries the connection, so one test produced several events. This confirms the firewall rules from GPO 3 are enforced and that dropped traffic is logged.
+
+![Event 5152 on DC01](screenshots/gp04-dc01-5152-drops.png)
