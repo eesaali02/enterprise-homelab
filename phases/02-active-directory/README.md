@@ -326,3 +326,74 @@ Done from MGMT01 as adm-eesa.ali, using the Delegation of Control Wizard in ADUC
 * Root cause: Windows Firewall writes into the log folder but doesn't create it, and it was missing on this fresh Server 2025 install.
 * Fix: created the folder and granted NT SERVICE\mpssvc Modify with icacls. Long-term fix: a Group Policy Preference (Folders) to create it on every server.
 * Open item: [log file now created after restart / still not created]. Blocked connections will also be checked as Event ID 5152 once the audit policy (GPO 4) is in place.
+
+## GPO 4: GPO_All_Audit (Advanced Audit Policy)
+
+**Goal:** Log the security events a SOC would need to investigate an incident (process execution, logons, Kerberos activity, lockouts, group changes, firewall drops and policy changes) on every domain machine. These logs will feed the SIEM in a later phase.
+
+**Linked to:** Domain root (`corp.lab.internal`), so it applies to workstations, servers and domain controllers.
+
+### Settings
+
+**Computer Configuration → Policies → Windows Settings → Security Settings → Advanced Audit Policy Configuration**
+
+| Subcategory | Audit | Key event IDs | Why it matters |
+|---|---|---|---|
+| Detailed Tracking → Process Creation | Success | 4688 | Records every program that runs; core evidence for malware and attacker activity |
+| Logon/Logoff → Logon | Success, Failure | 4624 / 4625 | Successful and failed logons per machine |
+| Account Logon → Kerberos Authentication Service | Success, Failure | 4771 | Failed Kerberos pre-auth on the DC; detects password guessing and spraying |
+| Account Logon → Kerberos Service Ticket Operations | Success, Failure | 4769 | Service ticket requests; used to detect Kerberoasting (T1558.003) |
+| Logon/Logoff → Account Lockout | Success | 4740 | Which account locked out, and from where |
+| Account Management → Security Group Management | Success, Failure | 4728 / 4729 | Members added to or removed from security groups; failures show unauthorized attempts |
+| Object Access → Filtering Platform Packet Drop | Failure | 5152 | Packets dropped by Windows Firewall; confirms GPO 3's block rules work |
+| Policy Change → Audit Policy Change | Success, Failure | 4719 | Alerts if someone changes or disables auditing |
+| DS Access → Directory Service Changes | Success | 5136 | Changes to AD objects (e.g. OUs, GPOs, user attributes) |
+| Logon/Logoff → Special Logon | Success | 4672 | Flags logons by privileged accounts (e.g. Domain Admins); useful for tracking admin activity |
+
+**Other settings**
+- **Administrative Templates → System → Audit Process Creation → Include command line in process creation events:** Enabled. 4688 then shows the full command, not just the program name.
+- **Security Options → Audit: Force audit policy subcategory settings to override audit policy category settings:** Enabled. This stops the older "basic" audit policy from overriding these advanced settings.
+- **Event Log → Maximum security log size:** 512 MB, so events aren't overwritten within hours.
+
+### Tests
+
+| # | Test | Machine | Expected event | Result |
+|---|---|---|---|---|
+| 1 | Run `whoami /groups` | WS01 | 4688 with the full command line | ✅ Pass |
+| 2 | Two failed logons for `joe.bob` | WS01 / DC01 | 4625 (WS01), 4771 Status 0x18 (DC01) | ✅ Pass |
+| 3 | Add and remove a user from a group | DC01 | 4728 / 4729 | Pending |
+| 4 | Blocked connection to a server | DC01 | 5152 (also closes the GPO 3 firewall log item) | Pending |
+
+#### Test 1: Process creation 
+
+Ran `whoami /groups` in PowerShell as `CORP\adm-eesa.ali` and queried event 4688:
+
+```powershell
+Get-WinEvent -FilterHashtable @{ LogName = 'Security'; Id = 4688 } -MaxEvents 30 |
+  Where-Object Message -match 'whoami' | Select-Object -First 1 | Format-List TimeCreated, Message
+```
+
+The event recorded the user, the parent process (`powershell.exe`), elevation (`TokenElevationTypeFull`) and the full command line (`whoami.exe /groups`), which is the detail a SOC needs to spot attacker reconnaissance.
+
+![Event 4688](screenshots/gp04-event-4688.png)
+
+#### Test 2: Failed logons 
+
+Ran `runas /user:CORP\joe.bob cmd` on WS01 with a wrong password, twice.
+
+**WS01 (4625):** both failures logged with SubStatus `0xC000006A` (bad password).
+
+![Event 4625 on WS01](screenshots/gp04-ws01-4625-query.png)
+
+**DC01 (4771):** at first, no events. `auditpol` on DC01 showed Kerberos Authentication Service set to Success only, and `gpresult` showed GPO_All_Audit wasn't applied: it was linked to `CORP/Computers`, and DCs live in the built-in Domain Controllers OU. I linked the GPO to Domain Controllers and retested:
+
+```powershell
+New-GPLink -Name GPO_All_Audit -Target "OU=Domain Controllers,DC=corp,DC=lab,DC=internal"
+```
+
+Both failures were then logged with Status `0x18` (bad password) from `10.10.20.50` (WS01).
+
+![Event 4771 on DC01](screenshots/gp04-dc01-4771-query.png)
+
+**Lesson:** a GPO linked to an OU doesn't reach domain controllers. The DCs, the most important machines to audit, need their own link.
+
